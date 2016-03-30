@@ -1,10 +1,9 @@
-
 import re
 import os
 import time
 
-def isStringLiteral(string):
 
+def isStringLiteral(string):
     for c in ["\"", "\'"]:
 
         if string.startswith(c) and string.endswith(c):
@@ -12,8 +11,8 @@ def isStringLiteral(string):
 
     return False
 
-def loadInitialSystemState(fname, settings):
 
+def loadInitialSystemState(fname, settings):
     if not os.path.exists(fname):
         return "File %s does not exist" % fname, settings
 
@@ -41,7 +40,7 @@ def loadInitialSystemState(fname, settings):
             continue
 
         if not ":" in line:
-            msg = "NOK: line %s not in format 'setting: value'"%line
+            msg = "NOK: line %s not in format 'setting: value'" % line
             break
 
         parts = line.split(":")
@@ -73,7 +72,7 @@ def loadInitialSystemState(fname, settings):
             values = values[0]
 
         if sectionName == "":
-            msg = "NOK: line %s not in any section"%line
+            msg = "NOK: line %s not in any section" % line
             break
 
         if sectionName == "General":
@@ -83,6 +82,6 @@ def loadInitialSystemState(fname, settings):
 
     fh.close()
 
-    settings["time"] = {"currentValue": time.time(), "unit":"unix time"}
+    settings["time"] = {"currentValue": time.time(), "unit": "unix time"}
 
     return msg

@@ -1,13 +1,11 @@
 import multiprocessing
-import os
 import time
-
 import iniReader
-import writeLog
 from BiotixGUI import BiotixGUI
-import supportFunctions
+import os
 
 softwareVersion = "V01-00"
+
 
 class BiotixProgram():
     def __init__(self, iniFile):
@@ -26,17 +24,14 @@ class BiotixProgram():
             self.initError = True
             return
 
+        print "info: Starting Biotix software"
+
         self.logFile = self.systemState["logFile"]
         self.recipeFolder = self.systemState["recipeFolder"]
         self.outputDirRoot = self.systemState["outputDir"]
-        self.pressureThreshold = self.systemState["pressureThreshold"]
 
         self.GUI = BiotixGUI(self)
-
-        print "info: Starting Biotix software"
-
         self.GUI.start()
-        print "info: National instruments data acquisition server started"
 
         self.quit = False
         self.recipe = None
@@ -57,7 +52,7 @@ class BiotixProgram():
                 if self.recipe.done:
                     print "info: Recipe successfully executed"
                     self.recipe = None
-                    
+
         self.GUI.quit()
 
         return
@@ -75,7 +70,7 @@ class BiotixProgram():
                 print "error: can't start recipe when one is already running"
                 return
 
-            self.recipe= msg["recipe"]
+            self.recipe = msg["recipe"]
 
             if "outputDir" in self.recipe.recipeInfo.keys():
                 outputDir = self.recipe.recipeInfo["outputDir"]
@@ -85,16 +80,16 @@ class BiotixProgram():
             if not os.path.exists(outputDir) and outputDir != "":
 
                 try:
-                    supportFunctions.mkdir(outputDir)
+                    os.mkdir(outputDir)
                     recipeFileName = self.recipe.recipeInfo["recipeFileName"]
                     recipeBaseName = os.path.basename(recipeFileName)
                     copyOfRecipe = os.path.join(outputDir, recipeBaseName)
 
                     os.system("cp \"{recipeFileName}\" \"{copyOfRecipe}\"".format(recipeFileName=recipeFileName,
-                                                                                  copyOfRecipe=copyOfRecipe) )
+                                                                                  copyOfRecipe=copyOfRecipe))
 
                 except OSError:
-                    print("error: Do not have permissions to create %s" %  outputDir)
+                    print("error: Do not have permissions to create %s" % outputDir)
                     self.recipe = None
                     return
 
@@ -145,8 +140,8 @@ class BiotixProgram():
 
         return
 
-def main():
 
+def main():
     thisFileName = os.path.realpath(__file__)
 
     iniFile = os.path.join(os.path.dirname(thisFileName), "biotix.ini")
@@ -162,6 +157,7 @@ def main():
 
     if not program.initError:
         program.mainLoop()
+
 
 if __name__ == "__main__":
     main()

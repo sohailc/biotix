@@ -8,11 +8,12 @@ import warnings
 
 dataAcquisitionRefreshTime = 0.1  # [s]
 
+
 def fxn():
     warnings.warn("deprecated", DeprecationWarning)
 
-def convertDAQVoltageToSIAndVV(deviceInfo, value, deviceType):
 
+def convertDAQVoltageToSIAndVV(deviceInfo, value, deviceType):
     if "D" in deviceInfo["CHANNEL"]:
         return value
 
@@ -27,7 +28,8 @@ def convertDAQVoltageToSIAndVV(deviceInfo, value, deviceType):
         if deviceType == "OUTPUT":
             return (math.log(value / params[0]) - params[2]) / params[1]
         elif deviceType == "INPUT":
-            return params[0] * 10**(params[1] * value + params[2])
+            return params[0] * 10 ** (params[1] * value + params[2])
+
 
 class NationalInstrumentsDevice:
     def __init__(self, biotixProgram):
@@ -66,19 +68,19 @@ class NationalInstrumentsDevice:
         if voltage < -10.0 or voltage > 10.0:
             return "error: Set AO: value %.3f V out of range" % voltage
 
-        subDevice = comedi.comedi_find_subdevice_by_type(self.device,comedi.COMEDI_SUBD_AO, 0)
+        subDevice = comedi.comedi_find_subdevice_by_type(self.device, comedi.COMEDI_SUBD_AO, 0)
         cr = comedi.comedi_get_range(self.device, subDevice, channel, 0)
         maxData = comedi.comedi_get_maxdata(self.device, subDevice, channel)
         value = comedi.comedi_from_phys(voltage, cr, maxData)
 
         nChannels = comedi.comedi_get_n_channels(self.device, subDevice)
-        nChannelPerConnector = nChannels/self.nConnectors
+        nChannelPerConnector = nChannels / self.nConnectors
 
         channelStr = str(channel)
-        channel += nChannelPerConnector*self.connector
+        channel += nChannelPerConnector * self.connector
 
         if channel > nChannels:
-            print "error: %s invalid analog output channel"%channelStr
+            print "error: %s invalid analog output channel" % channelStr
             return 0
 
         comedi.comedi_data_write(self.device,
@@ -94,16 +96,16 @@ class NationalInstrumentsDevice:
             if len(channel) == 2:
                 channel = int(channel[1])
 
-        subDevice = comedi.comedi_find_subdevice_by_type(self.device,comedi.COMEDI_SUBD_AI, 0)
+        subDevice = comedi.comedi_find_subdevice_by_type(self.device, comedi.COMEDI_SUBD_AI, 0)
 
         nChannels = comedi.comedi_get_n_channels(self.device, subDevice)
-        nChannelPerConnector = nChannels/self.nConnectors
+        nChannelPerConnector = nChannels / self.nConnectors
 
         channelStr = str(channel)
-        channel += nChannelPerConnector*self.connector
+        channel += nChannelPerConnector * self.connector
 
         if channel > nChannels:
-            print "error: %s invalid analog input channel"%channelStr
+            print "error: %s invalid analog input channel" % channelStr
             return 0
 
         readResult = comedi.comedi_data_read(self.device,
@@ -129,23 +131,23 @@ class NationalInstrumentsDevice:
             print "error: value must be either 0 or 1 for digital IO"
             return 0
 
-        subDevice = comedi.comedi_find_subdevice_by_type(self.device,comedi.COMEDI_SUBD_DIO, 0)
+        subDevice = comedi.comedi_find_subdevice_by_type(self.device, comedi.COMEDI_SUBD_DIO, 0)
         nChannels = comedi.comedi_get_n_channels(self.device, subDevice)
 
         if not channel in range(nChannels):
             print "error: channel must be between 0 and ", nChannels
             return 0
 
-        nChannelPerConnector = nChannels/(2*self.nConnectors)
+        nChannelPerConnector = nChannels / (2 * self.nConnectors)
 
         comedi.comedi_dio_config(self.device,
                                  subDevice,
-                                 channel+ nChannelPerConnector*self.connector,
+                                 channel + nChannelPerConnector * self.connector,
                                  comedi.COMEDI_OUTPUT)
 
         comedi.comedi_dio_write(self.device,
                                 subDevice,
-                                channel+ nChannelPerConnector*self.connector,
+                                channel + nChannelPerConnector * self.connector,
                                 value)
 
     def _translate(self, message):
@@ -169,7 +171,6 @@ class NationalInstrumentsDevice:
 
             deviceName = m.groups()[0]
             value = m.groups()[1]
-
 
             if not deviceName in self.outputDeviceNames:
                 err = "Message %s not understood" % message
@@ -211,7 +212,6 @@ class NationalInstrumentsDevice:
     def updateSystemState(self):
 
         for device in self.inputDeviceNames:
-
             channel = self.systemState[device]["CHANNEL"]
             voltage = self._getAI(channel)
             SIValue = convertDAQVoltageToSIAndVV(self.systemState[device], voltage, "INPUT")
@@ -223,7 +223,6 @@ class NationalInstrumentsDevice:
 
 
 class DAQServer():
-
     def __init__(self, biotixProgram):
 
         self.DAQRequestQueue = multiprocessing.Queue()
@@ -247,18 +246,18 @@ class DAQServer():
             print "warning: Starting DAQ server without real time monitoring"
             return
 
-        plots = {"Pressure":        {"plotType": ["semiLogY"],
-                                     "xDataSource": "time" ,
-                                     "yDataSource":"self.systemState[\"DAQINPUT.Pressure\"]"},
-                 "HV":              {"plotType": [],
-                                     "xDataSource": "time",
-                                     "yDataSource": "self.systemState[\"DAQINPUT.HV\"]"},
-                 "HV current":      {"plotType": [],
-                                     "xDataSource": "time",
-                                     "yDataSource": "self.systemState[\"DAQINPUT.HVCurrent\"]"},
-                 "nano ampere":     {"plotType": [],
-                                     "xDataSource": "time",
-                                     "yDataSource": "self.systemState[\"DAQINPUT.NanoAmp\"]"}}
+        plots = {"Pressure": {"plotType": ["semiLogY"],
+                              "xDataSource": "time",
+                              "yDataSource": "self.systemState[\"DAQINPUT.Pressure\"]"},
+                 "HV": {"plotType": [],
+                        "xDataSource": "time",
+                        "yDataSource": "self.systemState[\"DAQINPUT.HV\"]"},
+                 "HV current": {"plotType": [],
+                                "xDataSource": "time",
+                                "yDataSource": "self.systemState[\"DAQINPUT.HVCurrent\"]"},
+                 "nano ampere": {"plotType": [],
+                                 "xDataSource": "time",
+                                 "yDataSource": "self.systemState[\"DAQINPUT.NanoAmp\"]"}}
 
         self.GUI.addRealTimePlot(plots)
 
@@ -291,4 +290,3 @@ class DAQServer():
 
                 tb = time.time()
         return
-

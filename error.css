@@ -1,0 +1,15 @@
+
+error {
+    font-weight:bold;
+    color: red;
+}
+
+warning {
+    font-weight:bold;
+    color: orange;
+}
+
+info {
+    font-weight:bold;
+    color: green;
+}

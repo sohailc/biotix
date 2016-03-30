@@ -6,6 +6,7 @@ import time
 import multiprocessing
 import traceback
 
+
 class BiotixRecipe():
     def __init__(self, recipeFileName, systemState, ignoreTimeStampInRecipeInfo=False):
 
@@ -22,7 +23,7 @@ class BiotixRecipe():
         self.sequenceText, infoText, self.inputs = extraction
         self.recipeInfo = self._parseRecipeInfoText(infoText, self.systemState)
 
-         # All None values will be decided in due course
+        # All None values will be decided in due course
         self.executionSequence = None
         self.processesStarted = dict()
         self.currentStepInRecipe = 0
@@ -68,11 +69,10 @@ class BiotixRecipe():
 
         return "OK", [sequenceText, infoText, inputsDict]
 
-
     def _parseSequenceText(self, sequenceText, noHardwareCheck=False):
 
         for name, value in zip(self.inputs.keys(), self.inputs.values()):
-            exec("{name}=value".format(name=name))
+            exec ("{name}=value".format(name=name))
 
         sequence = []
         startedProcs = dict()
@@ -160,7 +160,6 @@ class BiotixRecipe():
             if startedProcs[startedProc]:
                 return "error: process %s started but not stopped" % startedProc, []
 
-
         return "OK", sequence
 
     def _parseRecipeInfoText(self, infoText, INI):
@@ -186,15 +185,15 @@ class BiotixRecipe():
                     try:
                         elementEvaluated = eval(element)
 
-                        if len(elementEvaluated) > 1 and type(elementEvaluated) != str :  # If there is more then one
-                        # value in the INI file, we need to present the user with the options
+                        if len(elementEvaluated) > 1 and type(elementEvaluated) != str:  # If there is more then one
+                            # value in the INI file, we need to present the user with the options
 
                             regex2 = ur"\[(.+?)\]+?"
                             elementName = "\\".join(re.findall(regex2, element))
                             elementName = elementName.strip("\"")
 
-                            elementEvaluated =  "{elementName}; {options}".format(elementName= elementName,
-                                                                                  options = ",".join(elementEvaluated))
+                            elementEvaluated = "{elementName}; {options}".format(elementName=elementName,
+                                                                                 options=",".join(elementEvaluated))
 
                             elementEvaluated = "{" + elementEvaluated + "}"
 
@@ -205,11 +204,11 @@ class BiotixRecipe():
                     elementEvaluated = timeStamp
 
                 if elementEvaluated != element:
-                    value = value.replace("{%s}"%element, elementEvaluated)
+                    value = value.replace("{%s}" % element, elementEvaluated)
 
             infoDict[name] = value
 
-        return  infoDict
+        return infoDict
 
     def _evaluateSequence(self, noHardwareCheck=False):
 
@@ -220,7 +219,6 @@ class BiotixRecipe():
             return "Evacuated sequence: " + parseResult, []
 
         return "OK", evacuatedSequence
-
 
     def setOutputDirectory(self, directoryPath):
         self.recipeInfo["outputDir"] = directoryPath
@@ -239,7 +237,7 @@ class BiotixRecipe():
 
     def start(self, biotixProgram):
 
-        from commandDefinitions import generateFinalReport
+        # from commandDefinitions import generateFinalReport
         from main import softwareVersion
 
         self.messageQueue = multiprocessing.Queue()
@@ -255,8 +253,8 @@ class BiotixRecipe():
         args = ([softwareVersion, self.executionSequence],
                 self.messageQueue, self.biotixProgram, self.recipeInfo)
 
-        reportGeneratingStep = generateFinalReport(*args)
-        self.executionSequence.append(reportGeneratingStep)
+        # reportGeneratingStep = generateFinalReport(*args)
+        # self.executionSequence.append(reportGeneratingStep)
 
         pid = self.executionSequence[0].start()
         self.processesStarted[pid] = self.executionSequence[0]
@@ -265,7 +263,7 @@ class BiotixRecipe():
 
     def regenerateFinalReport(self, biotixProgram):
 
-        from commandDefinitions import generateFinalReport
+        # from commandDefinitions import generateFinalReport
         from main import softwareVersion
 
         self.biotixProgram = biotixProgram
@@ -282,10 +280,10 @@ class BiotixRecipe():
         args = ([softwareVersion, executionSequence],
                 self.messageQueue, biotixProgram, self.recipeInfo)
 
-        reportGeneratingStep = generateFinalReport(*args)
-        self.executionSequence = [reportGeneratingStep]
-        pid = reportGeneratingStep.start()
-        self.processesStarted[pid] = reportGeneratingStep
+        # reportGeneratingStep = generateFinalReport(*args)
+        # self.executionSequence = [reportGeneratingStep]
+        # pid = reportGeneratingStep.start()
+        # self.processesStarted[pid] = reportGeneratingStep
 
         return "OK"
 
@@ -340,7 +338,7 @@ class BiotixRecipe():
                 # that if a recipe puts the maximum voltage on output and it received a stop message it needs
                 # at least 6500/500 = 15.0 seconds to close everything gracefully. We will allow a little
                 # additional time just to make sure...
-                acknowledgeTimeOut = 15.0 # A command should not take longer than this to shut down
+                acknowledgeTimeOut = 15.0  # A command should not take longer than this to shut down
                 stopAcknowledgmentReceived = False
                 t0 = time.time()
 
@@ -359,7 +357,8 @@ class BiotixRecipe():
                 # If a plugin command is programmed correctly, this can never happen. IF THIS HAPPENS, THE
                 # PROGRAMMER IF THE PLUGIN COMMAND NEEDS TO BE MADE AWARE
                 if not stopAcknowledgmentReceived:
-                    print "error: Killing %s by force. Please submit a TT to the programmer" % self.processesStarted[pid]
+                    print "error: Killing %s by force. Please submit a TT to the programmer" % self.processesStarted[
+                        pid]
                     self.processesStarted[pid].abort()
 
                 self.processesStarted[pid].cleanUp()
@@ -375,8 +374,3 @@ class BiotixRecipe():
         self.currentStepInRecipe = -1
 
         return
-
-
-
-
-

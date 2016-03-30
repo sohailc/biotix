@@ -3,8 +3,7 @@ import os
 import h5py
 import numpy
 import copy
-
-import supportFunctions
+import os
 
 errorLevels = ["info", "warning", "error"]
 
@@ -35,17 +34,16 @@ htmlHeader = """
 <link rel=\"stylesheet\" type=\"text/css\" href=\"error.css\"/>
 """
 
-def logPrintMessages(messageText, logFile):
 
+def logPrintMessages(messageText, logFile):
     path = os.path.dirname(logFile)
 
     if not os.path.exists(path):
-         supportFunctions.mkdir(path)
+        os.mkdir(path)
 
     errStyleSheetFileName = os.path.join(path, "error.css")
 
     if not os.path.exists(errStyleSheetFileName):
-
         fh = open(errStyleSheetFileName, "w")
         fh.write(errStyleSheet)
         fh.close()
@@ -68,6 +66,7 @@ def logPrintMessages(messageText, logFile):
     fh.close()
 
     return
+
 
 class dataLogger(object):
     def __init__(self, logFileName, systemState, logKeys, maxLogLinesPerSet=10000):
@@ -123,9 +122,8 @@ class dataLogger(object):
         dateStringNow = time.strftime("%Y%m%d-%H%M%S")
 
         for k in self.logKeys:
-
             logDataPath = "{}/{}".format(dateStringNow, k)
-            self.logFile.create_dataset(logDataPath, (0,1), maxshape=(None,1), dtype=numpy.float64)
+            self.logFile.create_dataset(logDataPath, (0, 1), maxshape=(None, 1), dtype=numpy.float64)
 
         return self.logFile[dateStringNow]
 
@@ -139,10 +137,9 @@ class dataLogger(object):
             self.linesWritten = 0
 
         for k in self.logKeys:
-
             m = self.logData[k].shape[0]
-            self.logData[k].resize(m+len(self.dataBuffer[k]), axis=0)
-            self.logData[k][m:,0] = numpy.array(self.dataBuffer[k])
+            self.logData[k].resize(m + len(self.dataBuffer[k]), axis=0)
+            self.logData[k][m:, 0] = numpy.array(self.dataBuffer[k])
             self.dataBuffer[k] = []
 
         self.logFile.close()
@@ -179,7 +176,7 @@ class dataLogger(object):
             if k in additionalKeys:
                 value = additionalKeys[k]
             else:
-                value = self._getValueFromSystemStateGivenKey(self.logKeys[k])
+                value = eval(self.logKeys[k])  # self._getValueFromSystemStateGivenKey(self.logKeys[k])
 
             self.dataBuffer[k].append(value)
 
@@ -213,9 +210,3 @@ class dataLogger(object):
 
     def close(self):
         self._writeBufferToFile()
-
-
-
-
-
-

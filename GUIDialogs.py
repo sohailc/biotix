@@ -1,8 +1,8 @@
 from gi.repository import Gtk, GObject, Gdk, GLib
 import time
 
-class BiotixMessage(Gtk.Dialog):
 
+class BiotixMessage(Gtk.Dialog):
     def __init__(self, parent, message):
         Gtk.Dialog.__init__(self, "My Dialog", parent, 0,
                             (Gtk.STOCK_OK, Gtk.ResponseType.OK))
@@ -20,12 +20,12 @@ class BiotixMessage(Gtk.Dialog):
 
         self.show_all()
 
-class BiotixDialog(Gtk.Dialog):
 
+class BiotixDialog(Gtk.Dialog):
     def __init__(self, parent, message):
         Gtk.Dialog.__init__(self, "My Dialog", parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-             Gtk.STOCK_OK, Gtk.ResponseType.OK))
+                            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                             Gtk.STOCK_OK, Gtk.ResponseType.OK))
 
         self.set_default_size(150, 100)
 
@@ -40,14 +40,14 @@ class BiotixDialog(Gtk.Dialog):
 
         self.show_all()
 
-class BiotixGetUserInput(Gtk.MessageDialog):
 
+class BiotixGetUserInput(Gtk.MessageDialog):
     def __init__(self, parent, inputNames, message, title=""):
         Gtk.MessageDialog.__init__(self, parent,
-                          Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                          Gtk.MessageType.QUESTION,
-                          Gtk.ButtonsType.OK_CANCEL,
-                          message)
+                                   Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                   Gtk.MessageType.QUESTION,
+                                   Gtk.ButtonsType.OK_CANCEL,
+                                   message)
 
         self.set_title(title)
         dialogBox = self.get_content_area()
@@ -89,16 +89,16 @@ class BiotixGetUserInput(Gtk.MessageDialog):
 
             for name in self.textBoxesDict.keys():
 
-                if type(self.textBoxesDict[name]) ==  Gtk.Entry:
+                if type(self.textBoxesDict[name]) == Gtk.Entry:
                     answersDict[name] = self.textBoxesDict[name].get_text().strip()
-                elif type(self.textBoxesDict[name]) ==  Gtk.ComboBoxText:
+                elif type(self.textBoxesDict[name]) == Gtk.ComboBoxText:
                     tree_iter = self.textBoxesDict[name].get_active_iter()
 
                     if tree_iter:
-                            model = self.textBoxesDict[name].get_model()
-                            answersDict[name] = model[tree_iter][0].strip()
+                        model = self.textBoxesDict[name].get_model()
+                        answersDict[name] = model[tree_iter][0].strip()
                     else:
-                            answersDict[name] = ""
+                        answersDict[name] = ""
 
         elif response == Gtk.ResponseType.CANCEL:
 
@@ -108,14 +108,14 @@ class BiotixGetUserInput(Gtk.MessageDialog):
 
         return answersDict
 
-class BiotixGetCMTCredentials(Gtk.MessageDialog):
 
+class BiotixGetCMTCredentials(Gtk.MessageDialog):
     def __init__(self, parent, message, title=""):
         Gtk.MessageDialog.__init__(self, parent,
-                          Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                          Gtk.MessageType.QUESTION,
-                          Gtk.ButtonsType.OK_CANCEL,
-                          message)
+                                   Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                   Gtk.MessageType.QUESTION,
+                                   Gtk.ButtonsType.OK_CANCEL,
+                                   message)
 
         self.set_title(title)
 
@@ -132,7 +132,7 @@ class BiotixGetCMTCredentials(Gtk.MessageDialog):
         self.passwordBox = Gtk.Entry()
         self.passwordBox.set_visibility(False)
         self.passwordBox.set_invisible_char("*")
-        self.passwordBox.set_size_request(250,0)
+        self.passwordBox.set_size_request(250, 0)
         self.passwordBox.set_activates_default(True)
         passwordLabel = Gtk.Label("CMT password", xalign=0)
         hbox2.pack_start(passwordLabel, False, True, 0)
