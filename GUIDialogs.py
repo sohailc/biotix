@@ -1,5 +1,4 @@
 from gi.repository import Gtk, GObject, Gdk, GLib
-import time
 
 
 class BiotixMessage(Gtk.Dialog):
@@ -108,52 +107,3 @@ class BiotixGetUserInput(Gtk.MessageDialog):
 
         return answersDict
 
-
-class BiotixGetCMTCredentials(Gtk.MessageDialog):
-    def __init__(self, parent, message, title=""):
-        Gtk.MessageDialog.__init__(self, parent,
-                                   Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                   Gtk.MessageType.QUESTION,
-                                   Gtk.ButtonsType.OK_CANCEL,
-                                   message)
-
-        self.set_title(title)
-
-        hbox1 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=1)
-        hbox2 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=1)
-
-        dialogBox = self.get_content_area()
-
-        self.userNameBox = Gtk.Entry()
-        userNameLabel = Gtk.Label("CMT user name", xalign=0)
-        hbox1.pack_start(userNameLabel, False, True, 0)
-        hbox1.pack_start(self.userNameBox, True, True, 0)
-
-        self.passwordBox = Gtk.Entry()
-        self.passwordBox.set_visibility(False)
-        self.passwordBox.set_invisible_char("*")
-        self.passwordBox.set_size_request(250, 0)
-        self.passwordBox.set_activates_default(True)
-        passwordLabel = Gtk.Label("CMT password", xalign=0)
-        hbox2.pack_start(passwordLabel, False, True, 0)
-        hbox2.pack_start(self.passwordBox, True, True, 0)
-
-        dialogBox.pack_end(hbox2, False, False, 0)
-        dialogBox.pack_end(hbox1, True, False, 0)
-
-        okButton = self.get_widget_for_response(response_id=Gtk.ResponseType.OK)
-        okButton.set_can_default(True)
-        okButton.grab_default()
-
-        self.show_all()
-
-    def getCredentials(self):
-        response = self.run()
-        password = self.passwordBox.get_text()
-        userName = self.userNameBox.get_text()
-        self.destroy()
-
-        if (response == Gtk.ResponseType.OK) and (password != "") and (userName != ""):
-            return {"password": password, "userName": userName, "timeStamp": time.time()}
-        else:
-            return None

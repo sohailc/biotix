@@ -81,7 +81,7 @@ class BiotixGUI(object):
     def _start(self):
 
         from gi.repository import Gtk, GObject, Gdk, GLib
-        from GUIDialogs import BiotixMessage, BiotixDialog, BiotixGetUserInput, BiotixGetCMTCredentials
+        from GUIDialogs import BiotixMessage, BiotixDialog, BiotixGetUserInput
 
         self.Gtk = Gtk
         self.GObject = GObject
@@ -90,7 +90,6 @@ class BiotixGUI(object):
 
         self.BiotixDialog = BiotixDialog
         self.BiotixGetUserInput = BiotixGetUserInput
-        self.BiotixGetCMTCredentials = BiotixGetCMTCredentials
         self.BiotixMessage = BiotixMessage
 
         if not self._checkHarddriveSpace():
@@ -560,49 +559,6 @@ class BiotixGUI(object):
     def _onAbortButtonClick(self, widget):
         self._sendSignal({"type": "abort"})
 
-    def _onVentButtonClick(self, widget):
-
-        recipeFileName = None
-
-        for key in self.recipeList.keys():
-            if "vent" in key:
-                recipeFileName = self.recipeList[key]["file"]
-
-        if not recipeFileName:
-            print "error: No vent recipe found!"
-            return
-
-        recipeFileName = os.path.join(self.recipeFolder, recipeFileName)
-
-        dialog = self.BiotixDialog(self.win, "Are you sure you want to vent the vacuum chamber?")
-        response = dialog.run()
-
-        if response == self.Gtk.ResponseType.OK:
-            self._sendExecuteMessage(recipeFileName)
-
-        dialog.destroy()
-
-    def _onEvacuateButtonClick(self, widget):
-
-        recipeFileName = None
-
-        for key in self.recipeList.keys():
-            if "evacuate" in key:
-                recipeFileName = self.recipeList[key]["file"]
-
-        if not recipeFileName:
-            print "No evacuate recipe found!"
-            return
-
-        recipeFileName = os.path.join(self.recipeFolder, recipeFileName)
-
-        dialog = self.BiotixDialog(self.win, "Are you sure you want to evacuate the vacuum chamber?")
-        response = dialog.run()
-
-        if response == self.Gtk.ResponseType.OK:
-            self._sendExecuteMessage(recipeFileName)
-
-        dialog.destroy()
 
     def _onCheckRecipeButtonClick(self, widget):
 

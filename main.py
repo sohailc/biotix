@@ -24,8 +24,6 @@ class BiotixProgram():
             self.initError = True
             return
 
-        print "info: Starting Biotix software"
-
         self.logFile = self.systemState["logFile"]
         self.recipeFolder = self.systemState["recipeFolder"]
         self.outputDirRoot = self.systemState["outputDir"]
@@ -35,6 +33,8 @@ class BiotixProgram():
 
         self.quit = False
         self.recipe = None
+
+        print "info: Started Biotix software"
 
     def mainLoop(self):
 
