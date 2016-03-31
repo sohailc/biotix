@@ -16,7 +16,7 @@ The software has few dependencies beyond standard Python modules. However, the f
 
 To get started with the measurement framework, a small example using an Arduino board has been provided. The sketch file for this example can be found under “arduino_sketches” in this repository.  The Arduino board needs to be hooked-up in the following way for this example to work. 
 
-![alt text](https://github.com/sohailc/biotix/docs/biotix_example_bb.png)
+![alt text](https://github.com/sohailc/biotix/blob/master/docs/biotix_example_bb.png)
 
 Before the software can run the Arduino recipe, the sketch file needs to be uploaded to the Arduino board. Consult the Arduino manual for guidelines. 
 
