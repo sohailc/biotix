@@ -9,6 +9,7 @@ To program a plug-in one creates a sub-class which inherits from an plug-in base
 # Dependencies
 
 The software has few dependencies beyond standard Python modules. However, the following needs to be installed:
+
 1. Gtk3 bindings for Python 2.7
 2. h5py for HDF5 support. This is needed for logging measurement data
 
