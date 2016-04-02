@@ -28,7 +28,7 @@ htmlHeader = """
 <!DOCTYPE html>
 <html>
 <head>
-<title>Vitriolix Log File</title>
+<title>Measurix Log File</title>
 </head>
 <body>
 <link rel=\"stylesheet\" type=\"text/css\" href=\"error.css\"/>
@@ -176,7 +176,7 @@ class dataLogger(object):
             if k in additionalKeys:
                 value = additionalKeys[k]
             else:
-                value = eval(self.logKeys[k])  # self._getValueFromSystemStateGivenKey(self.logKeys[k])
+                value = self._getValueFromSystemStateGivenKey(self.logKeys[k])
 
             self.dataBuffer[k].append(value)
 

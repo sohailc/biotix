@@ -6,7 +6,7 @@ from multiprocessing.queues import Queue
 import sys
 import numpy as np
 
-from readRecipe import BiotixRecipe
+from readRecipe import MeasurixRecipe
 from writeLog import logPrintMessages
 
 
@@ -21,13 +21,13 @@ class StdOutQueue(Queue):
         sys.__stdout__.flush()
 
 
-class BiotixGUI(object):
-    def __init__(self, BiotixProgram):
+class MeasurixGUI(object):
+    def __init__(self, MeasurixProgram):
 
         self.win = None
-        self.BiotixProgram = BiotixProgram
-        self.systemState = BiotixProgram.systemState
-        self.softwareVersion = BiotixProgram.softwareVersion
+        self.MeasurixProgram = MeasurixProgram
+        self.systemState = MeasurixProgram.systemState
+        self.softwareVersion = MeasurixProgram.softwareVersion
         self.recipeFolder = self.systemState["recipeFolder"]
         self.outputDirRoot = self.systemState["outputDir"]
         self.logFile = self.systemState["logFile"]
@@ -81,16 +81,16 @@ class BiotixGUI(object):
     def _start(self):
 
         from gi.repository import Gtk, GObject, Gdk, GLib
-        from GUIDialogs import BiotixMessage, BiotixDialog, BiotixGetUserInput
+        from GUIDialogs import MeasurixMessage, MeasurixDialog, MeasurixGetUserInput
 
         self.Gtk = Gtk
         self.GObject = GObject
         self.Gdk = Gdk
         self.GLib = GLib
 
-        self.BiotixDialog = BiotixDialog
-        self.BiotixGetUserInput = BiotixGetUserInput
-        self.BiotixMessage = BiotixMessage
+        self.MeasurixDialog = MeasurixDialog
+        self.MeasurixGetUserInput = MeasurixGetUserInput
+        self.MeasurixMessage = MeasurixMessage
 
         if not self._checkHarddriveSpace():
             self._sendSignal({"type": "quit"})
@@ -129,7 +129,7 @@ class BiotixGUI(object):
 
         if freeDiskSpaceInBytes < minimumFreeDiskSpaceInGB * 1024 ** 3:
 
-            dialog = self.BiotixDialog(self.win, "The amount of disk space %.1f GB is less then %.1f GB. "
+            dialog = self.MeasurixDialog(self.win, "The amount of disk space %.1f GB is less then %.1f GB. "
                                                  "Are you sure you want to continue?" % (
                                        freeDiskSpaceInBytes / (1024 ** 3),
                                        minimumFreeDiskSpaceInGB))
@@ -362,7 +362,7 @@ class BiotixGUI(object):
     def _getRecipeListFromLocalFolder(self):
 
         listOfFiles = os.listdir(self.recipeFolder)
-        recipeNamePattern = "biotixRecipe_(.*)-|_(v\d*-\d*).zip"
+        recipeNamePattern = "measurixRecipe_(.*)-|_(v\d*-\d*).zip"
         self.recipeList = dict()
 
         for fileName in listOfFiles:
@@ -483,7 +483,7 @@ class BiotixGUI(object):
         answers = dict()
 
         if len(unknowns):
-            userInputBox = self.BiotixGetUserInput(self.win, unknowns, "please give the following information")
+            userInputBox = self.MeasurixGetUserInput(self.win, unknowns, "please give the following information")
             answers = userInputBox.getAnswers()
 
         return answers
@@ -522,7 +522,7 @@ class BiotixGUI(object):
 
     def _sendExecuteMessage(self, recipeFileName):
 
-        recipe = BiotixRecipe(recipeFileName, self.systemState)
+        recipe = MeasurixRecipe(recipeFileName, self.systemState)
 
         if recipe.init != "OK":
             print recipe.init
@@ -570,7 +570,7 @@ class BiotixGUI(object):
 
         filter = self.Gtk.FileFilter()
         filter.set_name('zip files')
-        filter.add_pattern('biotixRecipe_*.zip')
+        filter.add_pattern('measurixRecipe_*.zip')
         dialog.add_filter(filter)
 
         response = dialog.run()
@@ -588,7 +588,7 @@ class BiotixGUI(object):
         if os.path.isdir(recipeFileName):
             return
 
-        recipe = BiotixRecipe(recipeFileName, self.systemState)
+        recipe = MeasurixRecipe(recipeFileName, self.systemState)
         print "info: checking recipe %s" % recipeFileName
 
         self._sendSignal({"type": "check", "recipe": recipe})
@@ -641,7 +641,7 @@ class BiotixGUI(object):
             print "error: file does not exist"
             return
 
-        recipe = BiotixRecipe(recipeFileName, self.systemState, ignoreTimeStampInRecipeInfo=True)
+        recipe = MeasurixRecipe(recipeFileName, self.systemState, ignoreTimeStampInRecipeInfo=True)
         outputDirInRecipe = recipe.recipeInfo["outputDir"]
 
         if recipe.init != "OK":

@@ -1,7 +1,7 @@
 from gi.repository import Gtk, GObject, Gdk, GLib
 
 
-class BiotixMessage(Gtk.Dialog):
+class MeasurixMessage(Gtk.Dialog):
     def __init__(self, parent, message):
         Gtk.Dialog.__init__(self, "My Dialog", parent, 0,
                             (Gtk.STOCK_OK, Gtk.ResponseType.OK))
@@ -20,7 +20,7 @@ class BiotixMessage(Gtk.Dialog):
         self.show_all()
 
 
-class BiotixDialog(Gtk.Dialog):
+class MeasurixDialog(Gtk.Dialog):
     def __init__(self, parent, message):
         Gtk.Dialog.__init__(self, "My Dialog", parent, 0,
                             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
@@ -40,7 +40,7 @@ class BiotixDialog(Gtk.Dialog):
         self.show_all()
 
 
-class BiotixGetUserInput(Gtk.MessageDialog):
+class MeasurixGetUserInput(Gtk.MessageDialog):
     def __init__(self, parent, inputNames, message, title=""):
         Gtk.MessageDialog.__init__(self, parent,
                                    Gtk.DialogFlags.MODAL | Gtk.DialogFlags.DESTROY_WITH_PARENT,

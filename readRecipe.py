@@ -7,7 +7,7 @@ import multiprocessing
 import traceback
 
 
-class BiotixRecipe():
+class MeasurixRecipe():
     def __init__(self, recipeFileName, systemState, ignoreTimeStampInRecipeInfo=False):
 
         self.ignoreTimeStampInRecipeInfo = ignoreTimeStampInRecipeInfo
@@ -28,7 +28,7 @@ class BiotixRecipe():
         self.processesStarted = dict()
         self.currentStepInRecipe = 0
         self.done = False
-        self.biotixProgram = None
+        self.measurixProgram = None
 
     def _extractRecipeFile(self, recipeFile):
         try:
@@ -127,7 +127,7 @@ class BiotixRecipe():
                     except NameError:
                         return "error: Line %i: %s. Input %s not defined" % (lineNo, line, argString), []
 
-                comObj = commandObj(argArray, self.messageQueue, self.biotixProgram, self.recipeInfo)
+                comObj = commandObj(argArray, self.messageQueue, self.measurixProgram, self.recipeInfo)
 
                 try:
                     checkResult = comObj.checker(noHardwareCheck=noHardwareCheck)
@@ -197,7 +197,7 @@ class BiotixRecipe():
 
                             elementEvaluated = "{" + elementEvaluated + "}"
 
-                    except KeyError:
+                    except (KeyError, AttributeError):
                         return "Error, %s not known in INI file" % element
 
                 if element == "time stamp" and not self.ignoreTimeStampInRecipeInfo:
@@ -228,20 +228,20 @@ class BiotixRecipe():
         for key in additionalInfo:
             self.recipeInfo[key] = additionalInfo[key]
 
-    def check(self, biotixProgram):
-        self.biotixProgram = biotixProgram
+    def check(self, measurixProgram):
+        self.measurixProgram = measurixProgram
 
         evaluateResult, sequence = self._evaluateSequence()
 
         return evaluateResult
 
-    def start(self, biotixProgram):
+    def start(self, measurixProgram):
 
         # from commandDefinitions import generateFinalReport
         from main import softwareVersion
 
         self.messageQueue = multiprocessing.Queue()
-        self.biotixProgram = biotixProgram
+        self.measurixProgram = measurixProgram
 
         evaluateResult, self.executionSequence = self._evaluateSequence()
 
@@ -251,7 +251,7 @@ class BiotixRecipe():
         self.currentStepInRecipe = 0
 
         args = ([softwareVersion, self.executionSequence],
-                self.messageQueue, self.biotixProgram, self.recipeInfo)
+                self.messageQueue, self.measurixProgram, self.recipeInfo)
 
         # reportGeneratingStep = generateFinalReport(*args)
         # self.executionSequence.append(reportGeneratingStep)
@@ -261,12 +261,12 @@ class BiotixRecipe():
 
         return "OK"
 
-    def regenerateFinalReport(self, biotixProgram):
+    def regenerateFinalReport(self, measurixProgram):
 
         # from commandDefinitions import generateFinalReport
         from main import softwareVersion
 
-        self.biotixProgram = biotixProgram
+        self.measurixProgram = measurixProgram
 
         self.messageQueue = multiprocessing.Queue()
 
@@ -278,7 +278,7 @@ class BiotixRecipe():
         self.currentStepInRecipe = 0
 
         args = ([softwareVersion, executionSequence],
-                self.messageQueue, biotixProgram, self.recipeInfo)
+                self.messageQueue, measurixProgram, self.recipeInfo)
 
         # reportGeneratingStep = generateFinalReport(*args)
         # self.executionSequence = [reportGeneratingStep]

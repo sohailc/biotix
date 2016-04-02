@@ -3,8 +3,8 @@ import os
 import traceback
 
 
-class BiotixCommand(object):
-    def __init__(self, args, messageQueue, biotixProgram, recipeInfo, childConnection=None):
+class MeasurixCommand(object):
+    def __init__(self, args, messageQueue, measurixProgram, recipeInfo, childConnection=None):
 
         import multiprocessing
 
@@ -13,16 +13,16 @@ class BiotixCommand(object):
 
         if not childConnection:
             self.parentConnection, self.childConnection = multiprocessing.Pipe()
-        else:  # This happens if the Biotix command is called from another Biotix command.
+        else:  # This happens if the Measurix command is called from another Measurix command.
             self.childConnection = childConnection
             self.parentConnection = None
 
         self.proc = multiprocessing.Process(target=self.protectedWorker)
         self.sendMessageQueue = messageQueue
 
-        self.biotixProgram = biotixProgram
-        self.systemState = biotixProgram.systemState
-        self.GUI = biotixProgram.GUI
+        self.measurixProgram = measurixProgram
+        self.systemState = measurixProgram.systemState
+        self.GUI = measurixProgram.GUI
 
         if "outputDir" in recipeInfo.keys():
             self.outputDirectory = recipeInfo["outputDir"]
@@ -56,7 +56,7 @@ class BiotixCommand(object):
 
         inputCheckResult = self.inputChecker()
 
-        if inputCheckResult != "OK" or not self.biotixProgram or noHardwareCheck:
+        if inputCheckResult != "OK" or not self.measurixProgram or noHardwareCheck:
             return inputCheckResult
 
         return self.hardwareChecker()
@@ -96,7 +96,7 @@ class BiotixCommand(object):
 
     def start(self):
 
-        if not self.biotixProgram:
+        if not self.measurixProgram:
             print "cannot start if not connected to a program"
 
         self.proc.start()
@@ -129,7 +129,7 @@ class stopProcessStub(object):
 
 
 ##################################################################################################################
-class execute_sleep(BiotixCommand):
+class execute_sleep(MeasurixCommand):
     def worker(self):
         print "info: sleeping for %.1f seconds" % self.args[0]
 
@@ -146,7 +146,7 @@ class execute_sleep(BiotixCommand):
 
 ################################################################################################################
 
-class execute_arduino(BiotixCommand):
+class startProcess_arduino(MeasurixCommand):
     def worker(self):
 
         import numpy as np
@@ -161,8 +161,12 @@ class execute_arduino(BiotixCommand):
                                "plotTitle": "light sensitive resistor",
                                "xDataSource": "time"}}
 
+        logKeys = {"pot_meter [Ohm]": "arduino/measurement/pot_meter/currentValue",
+                   "LSR [Ohm]": "arduino/measurement/light_resistor/currentValue"}
+
         logFile = os.path.join(self.outputDirectory, "arduino_log.h5")
-        logger = writeLog.dataLogger(logFile, self.systemState, showArduino)
+        print("info: saving to log file {}".format(logFile))
+        logger = writeLog.dataLogger(logFile, self.systemState, logKeys)
 
         plotsShown = False
 
@@ -201,7 +205,80 @@ class execute_arduino(BiotixCommand):
         return "OK"
 
     def inputChecker(self):
-
         return "OK"
 
 ################################################################################################################
+
+class startProcess_webcam(MeasurixCommand):
+
+    def worker(self):
+
+        import pygame
+        import pygame.camera
+        import Image
+        import os
+
+        showCamera = {"camera": {"plotType": ["image"],
+                                 "imageDataSource": "self.systemState[\"camera\"][\"data\"]",
+                                 "plotTitle": "web cam"}}
+
+        resolution = self.args
+        camera = pygame.camera.Camera(self.camera_device, resolution)
+        camera.start()
+
+        plotsShown = False
+        frame_count = 0
+
+        outputDirectory = os.path.join(self.outputDirectory, "frames")
+
+        if not os.path.exists(outputDirectory):
+            os.mkdir(outputDirectory)
+
+        print("info: saving frames to {}".format(outputDirectory))
+
+        while not self.receiveStopMessage(0.5):
+
+            image = camera.get_image()
+            image_data = pygame.surfarray.array3d(image)
+            frame = image_data[..., 0][:, ::-1].T
+            self.systemState["camera"] = {"data": frame}
+
+            image_file = os.path.join(outputDirectory, "frame-{}.jpeg".format(str(frame_count)))
+
+            pil_image = Image.fromarray(image_data)
+            pil_image.save(image_file)
+            frame_count += 1
+
+            if not plotsShown:
+                self.GUI.addRealTimePlot(showCamera)
+                plotsShown = True
+
+        camera.stop()
+
+    def hardwareChecker(self):
+
+        import pygame
+        import pygame.camera
+
+        pygame.init()
+        pygame.camera.init()
+
+        clist = pygame.camera.list_cameras()
+        if not clist:
+            return "Error: No camera's detected"
+
+        self.camera_device = clist[0]
+
+        return "OK"
+
+    def inputChecker(self):
+
+        try:
+            import pygame
+        except ImportError:
+            return "Error: you need pygame installed for this to work"
+
+        if [type(i) for i in self.args] != [int, int]:
+            return "Error: Two arguments specifying resolution is required"
+
+        return "OK"

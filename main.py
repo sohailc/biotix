@@ -1,13 +1,13 @@
 import multiprocessing
 import time
 import iniReader
-from BiotixGUI import BiotixGUI
+from MeasurixGUI import MeasurixGUI
 import os
 
 softwareVersion = "V01-00"
 
 
-class BiotixProgram():
+class MeasurixProgram():
     def __init__(self, iniFile):
 
         self.softwareVersion = softwareVersion
@@ -28,13 +28,13 @@ class BiotixProgram():
         self.recipeFolder = self.systemState["recipeFolder"]
         self.outputDirRoot = self.systemState["outputDir"]
 
-        self.GUI = BiotixGUI(self)
+        self.GUI = MeasurixGUI(self)
         self.GUI.start()
 
         self.quit = False
         self.recipe = None
 
-        print "info: Started Biotix software"
+        print "info: Started Measurix software"
 
     def mainLoop(self):
 
@@ -133,7 +133,7 @@ class BiotixProgram():
         elif msg["type"] == "quit":
 
             if not self.recipe:
-                print "info: quitting Biotix software"
+                print "info: quitting Measurix software"
                 self.quit = True
             else:
                 print "error: can't quit while recipe is running"
@@ -144,7 +144,7 @@ class BiotixProgram():
 def main():
     thisFileName = os.path.realpath(__file__)
 
-    iniFile = os.path.join(os.path.dirname(thisFileName), "biotix.ini")
+    iniFile = os.path.join(os.path.dirname(thisFileName), "measurix.ini")
 
     if not os.path.exists(iniFile):
         print "No INI file found!"
@@ -153,7 +153,7 @@ def main():
 
     print "using INI file ", iniFile
 
-    program = BiotixProgram(iniFile)
+    program = MeasurixProgram(iniFile)
 
     if not program.initError:
         program.mainLoop()
