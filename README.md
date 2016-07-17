@@ -1,21 +1,10 @@
-# Introduction Biotix - A python measurement framework
+# Introduction Measurix - A python measurement framework
 
 This project implements a Python based measurement framework which is able to take measurements from heterogeneous devices to combine everything in one visualization, logging, queuing and management platform. A brief schematic overview is given below:
 
 <img src="https://github.com/sohailc/measurix/blob/master/overview.png" height="400" /> 
 
-At the moment this software works on Linux only with Python 2.7. 
-
 The plug-in architecture of the software makes adding support for new hardware easy. A programmer can develop a plug-in for hardware and call the plug-in from a recipe file. A recipe file is a text file specifying which plug-in needs to be called and what parameters need to be used.
-
-To program a plug-in one creates a sub-class which inherits from an plug-in base class. Each plug-in sub-class implements specific methods which were left as a stub in the base class. These methods check for the availability of hardware, determine if the correct number and type of arguments have been defined in the recipe file, execute the functionality of the plug-in and finally make a chapter in a PDF measurement report.
-
-# Dependencies
-
-The software has few dependencies beyond standard Python modules. However, the following needs to be installed:
-
-1. Gtk3 bindings for Python 2.7
-2. h5py for HDF5 support. This is needed for logging measurement data
 
 # Arduino example
 
@@ -26,5 +15,5 @@ To get started with the measurement framework, a small example using an Arduino 
 Before the software can run the Arduino recipe, the sketch file needs to be uploaded to the Arduino board. Consult the Arduino manual for guidelines. 
 
 A screen recording showing the software at work with the Arduino device can be seen 
-[![ScreenShot](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](http://sohailchatoor.com/wp-content/uploads/2016/03/recording-020416.mp4?_=1)
+[![ScreenShot](http://sohailchatoor.com/wp-content/uploads/2016/07/vlcsnap-2016-07-17-20h06m09s175.png)](http://sohailchatoor.com/wp-content/uploads/2016/03/recording-020416.mp4?_=1)
 
