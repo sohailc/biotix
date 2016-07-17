@@ -26,5 +26,5 @@ To get started with the measurement framework, a small example using an Arduino 
 Before the software can run the Arduino recipe, the sketch file needs to be uploaded to the Arduino board. Consult the Arduino manual for guidelines. 
 
 A screen recording showing the software at work with the Arduino device can be seen 
-<iframe width="420" height="315" src="//www.youtube.com/embed/KgLfpnPdqZw" frameborder="0" allowfullscreen></iframe>
+[![ScreenShot](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](http://youtu.be/vt5fpE0bzSY)
 
