@@ -1,6 +1,6 @@
 # Introduction Biotix - A python measurement framework
 
-This project implements a Python based measurement framework. This software is able to take measurements from heterogeneous devices to combine everything in one visualization, logging, queuing and management platform. A brief schematic overview is given below:
+This project implements a Python based measurement framework which is able to take measurements from heterogeneous devices to combine everything in one visualization, logging, queuing and management platform. A brief schematic overview is given below:
 
 <img src="https://github.com/sohailc/measurix/blob/master/overview.png" height="400" /> 
 
@@ -25,5 +25,9 @@ To get started with the measurement framework, a small example using an Arduino 
 
 Before the software can run the Arduino recipe, the sketch file needs to be uploaded to the Arduino board. Consult the Arduino manual for guidelines. 
 
-A screen recording showing the software at work with the Arduino device can be seen [here](http://sohailchatoor.com/measurement-automation/). 
+A screen recording showing the software at work with the Arduino device can be seen 
+<video controls="controls">
+  <source type="video/mp4" src="recording/recording_v1.0-27032016.mp4"></source>
+  <p>Your browser does not support the video element.</p>
+</video>
 
