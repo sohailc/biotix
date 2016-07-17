@@ -26,8 +26,10 @@ To get started with the measurement framework, a small example using an Arduino 
 Before the software can run the Arduino recipe, the sketch file needs to be uploaded to the Arduino board. Consult the Arduino manual for guidelines. 
 
 A screen recording showing the software at work with the Arduino device can be seen 
-<video controls="controls">
-  <source type="video/mp4" src="recording/recording_v1.0-27032016.mp4"></source>
-  <p>Your browser does not support the video element.</p>
+<script src="http://vjs.zencdn.net/4.0/video.js"></script>
+<video id="pelican-installation" class="video-js vjs-default-skin" controls
+preload="auto" width="683" height="384" 
+data-setup="{}">
+<source src="recording/recording_v1.0-27032016.mp4" type='video/mp4'>
 </video>
 
