@@ -1,6 +1,6 @@
 # Introduction Biotix - A python measurement framework
 
-This project implements a Python based measurement framework. This software is able to take measurements from heterogeneous devices to combine everything in one visualization, logging, queuing and management platform. A brief schematic overview is given below <img src="https://github.com/sohailc/measurix/blob/master/overview.png" width="200" height="200" />. At the moment this software works on Linux only with Python 2.7. 
+This project implements a Python based measurement framework. This software is able to take measurements from heterogeneous devices to combine everything in one visualization, logging, queuing and management platform. A brief schematic overview is given below <img src="https://github.com/sohailc/measurix/blob/master/overview.png" height="400" />. At the moment this software works on Linux only with Python 2.7. 
 
 The plug-in architecture of the software makes adding support for new hardware easy. A programmer can develop a plug-in for hardware and call the plug-in from a recipe file. A recipe file is a text file specifying which plug-in needs to be called and what parameters need to be used.
 
