@@ -14,6 +14,6 @@ To get started with the measurement framework, a small example using an Arduino 
 
 Before the software can run the Arduino recipe, the sketch file needs to be uploaded to the Arduino board. Consult the Arduino manual for guidelines. 
 
-A screen recording showing the software at work with the Arduino device can be seen 
+Click on the picture below to view a screen recording showing the software at work with the Arduino device. 
 [![ScreenShot](http://sohailchatoor.com/wp-content/uploads/2016/07/vlcsnap-2016-07-17-20h06m09s175.png)](http://sohailchatoor.com/wp-content/uploads/2016/03/recording-020416.mp4?_=1)
 
